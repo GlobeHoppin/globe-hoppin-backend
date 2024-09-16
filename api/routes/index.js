@@ -1,6 +1,10 @@
-const SigninRouter = require("./signin");
+import SigninRouter from "./signin";
+import HealthRouter from "./health"
 
-const Routes = [{ path: "/signin", router: SigninRouter }];
+const Routes = [
+    { path: "/", router: HealthRouter },
+    { path: "/auth", router: SigninRouter }
+];
 
 Routes.init = (app) => {
     if (!app || !app.use) {
@@ -20,4 +24,4 @@ Routes.init = (app) => {
     })
 }
 
-module.exports = Routes
+export default Routes
