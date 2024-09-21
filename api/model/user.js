@@ -88,7 +88,6 @@ const User = mongoose.model("User", UserProfileSchema);
 
 export default User;
 
-
 // Get all users
 export const getAllUsers = async (query = {}, select = {}) => {
   try {
