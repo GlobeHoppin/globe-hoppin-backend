@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const PinSchema = new mongoose.Schema(
   {
     latitude: {

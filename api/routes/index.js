@@ -1,9 +1,13 @@
-import SigninRouter from "./signin";
+import AuthRouter from "./auth";
 import HealthRouter from "./health"
+import PinRouter from "./pin";
+import UserRouter from "./user";
 
 const Routes = [
     { path: "/", router: HealthRouter },
-    { path: "/auth", router: SigninRouter }
+    { path: "/auth", router: AuthRouter },
+    { path: "/pin", router: PinRouter },
+    { path: "/user", router: UserRouter },
 ];
 
 Routes.init = (app) => {
