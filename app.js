@@ -1,11 +1,17 @@
-'use strict'
+"use strict";
 
 import Express from "express";
+import bodyParser from 'body-parser'
+
 import Routes from "./api/routes";
-import MONGO_CONFIG from "./database";
 import startServer from "./startServer";
 const app = new Express();
-require("dotenv").config();
+
+// support parsing of application/json type post data
+app.use(bodyParser.json());
+
+//support parsing of application/x-www-form-urlencoded post data
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Initialize Routes
 Routes.init(app);
@@ -14,4 +20,4 @@ Routes.init(app);
 startServer(app);
 
 // For testing
-module.export = app
+module.export = app;

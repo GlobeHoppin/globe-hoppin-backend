@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
 
 const {
-  MONGO_DBNAME = "globehoppin",
-  MONGO_HOSTS = "27017",
-  MONGO_USERNAME = "globehoppinmvp",
-  MONGO_PASSWORD = "tmKbaqRjAJi75wln",
+  MONGO_DBNAME = "",
+  MONGO_HOSTS = "",
+  MONGO_USERNAME = "",
+  MONGO_PASSWORD = "",
   MONGO_REPLICASET,
   MONGO_READ_PREFERENCE,
   MONGO_PEM_PATH = "",
