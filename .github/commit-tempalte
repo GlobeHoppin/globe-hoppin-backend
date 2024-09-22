@@ -1,0 +1,43 @@
+# Ticket: PROJECT-NUMBER
+
+# Limit the subject line to no more than 72 characters, ends here ---> |
+# Limit the body lines to no more than 100 characters, ends here --------------------------------> |
+#
+# Use https://www.conventionalcommits.org/en/v1.0.0/ which looks like:
+#
+# | <type>   | Description: A change that...                  |
+# |----------|------------------------------------------------|
+# | feat     | Adds a new feature                             |
+# | fix      | Fixes a bug                                    |
+# | docs     | Modifies documentation                         |
+# | style    | Doesn't affect the behavior of code            |
+# | refactor | Modifies the layout or formatting of code      |
+# | perf     | Improves performance without altering behavior |
+# | test     | Adds tests or corrects existing tests          |
+# | build    | Modifies the build system                      |
+# | ci       | Modifies CI or scripts called by CI            |
+# | chore    | Doesn't modify source or test files            |
+# | revert   | Reverts a previous commit                      |
+#
+# The header line has a max length of 72 characters and each body
+# line has a max length of 100 characters.
+#
+# We uses the https://www.conventionalcommits.org/en/v1.0.0/ standard across all repositories, unless stated otherwise.
+#
+# The commit message should be structured as follows:
+#
+# <type>[optional scope]: <description>
+# [optional body]
+# [optional footer(s)]
+# The header line has a max length of 72 characters and each body line has a max length of 100 characters.
+#
+# Why
+# The value add of a git commit standard is that this leads to more readable messages that are easy to follow when looking through # the project history. 
+#
+# The metadata component of this standard will help formalize the structure on which tooling can be built for: 
+#
+# automated GITHUB Issue updates when a commit is merged with a ticket
+#
+# automated change log and release notes generation.
+#
+# Here is a quick-reference of valid types:
