@@ -19,9 +19,9 @@ export const validateToken = async (req, res, next) => {
       return res.status(401).json({ message: "Token expired", status: 401 });
     }
     req.user = decoded.data;
-    next()
+    next();
   } catch (error) {
-    return res.status(401).json({ message: 'Token is expried.' })
+    return res.status(401).json({ message: "Token is expried." });
   }
 };
 
@@ -30,10 +30,10 @@ export const checkAuthorisation = async (req, res, next) => {
   try {
     const user = req.user;
     if (!user) {
-      return res.status(401).json({ message: 'Unauthorized' })
+      return res.status(401).json({ message: "Unauthorized" });
     }
-    next()
+    next();
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized' })
+    return res.status(401).json({ message: "Unauthorized" });
   }
-}
+};
