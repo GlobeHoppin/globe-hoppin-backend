@@ -27,7 +27,7 @@ const REQUIRED_CONFIG = [
 
 const CONFIG = {};
 
-const CONNECTION_URI = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.8ysl0ky.mongodb.net/${MONGO_DBNAME}`;
+const CONNECTION_URI = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@globehoppin.6ydzn.mongodb.net/${MONGO_DBNAME}`;
 //@cluster0.8ysl0ky.mongodb.net
 const mongoConnect = async () => {
   console.log("[Connection] Connecting to DB...");
