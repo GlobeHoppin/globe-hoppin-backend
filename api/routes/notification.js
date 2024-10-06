@@ -1,5 +1,4 @@
 import express from "express";
-import { validateToken } from "../middleware/auth";
 import NotificationService from "../controller/notification";
 
 const NotificationRouter = express.Router();

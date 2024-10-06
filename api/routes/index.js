@@ -2,7 +2,7 @@ import AuthRouter from "./auth";
 import HealthRouter from "./health";
 import PinRouter from "./pin";
 import UserRouter from "./user";
-import NotificationRouter from "./Notification";
+import NotificationRouter from "./notification";
 
 const Routes = [
   { path: "/", router: HealthRouter },
