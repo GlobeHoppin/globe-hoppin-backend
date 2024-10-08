@@ -98,3 +98,12 @@ $ git checkout main             # Switch to the main branch (or, master branch)
 $ git pull origin main          # Fetch and Merge upstream/master into the local branch
 ```
 _ _ _
+
+## Thanks to our contributors 🙌🏻
+
+<a href="https://github.com/GlobeHoppin/globe-hoppin-backend/pulse">
+  <img align="center" src="https://contrib.rocks/image?max=100&repo=GlobeHoppin/globe-hoppin-backend" />
+</a>
+
+
+--- 
