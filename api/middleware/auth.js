@@ -21,7 +21,7 @@ export const validateToken = async (req, res, next) => {
     req.user = decoded.data;
     next();
   } catch (error) {
-    return res.status(401).json({ message: error.message });
+    return res.status(401).json({ message: "Token is expried." });
   }
 };
 
@@ -32,7 +32,7 @@ export const accessToken = async (req, res, next) => {
     if (!token) {
       return res
         .status(401)
-        .json({ message: "No token provided for accesstoken", status: 401 });
+        .json({ message: "No token provided accesstoken", status: 401 });
     }
 
     const decoded = jwt.verify(token, secret);
@@ -42,7 +42,7 @@ export const accessToken = async (req, res, next) => {
     req.access = decoded.data;
     next();
   } catch (error) {
-    return res.status(401).json({ message: error.message });
+    return res.status(401).json({ message: "Token is expried." });
   }
 };
 

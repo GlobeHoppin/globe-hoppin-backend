@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const {
   MONGO_DBNAME = "",
@@ -28,7 +28,7 @@ const REQUIRED_CONFIG = [
 const CONFIG = {};
 
 const CONNECTION_URI = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@globehoppin.6ydzn.mongodb.net/${MONGO_DBNAME}`;
-
+//@cluster0.8ysl0ky.mongodb.net
 const mongoConnect = async () => {
   console.log("[Connection] Connecting to DB...");
   await mongoose.connect(CONNECTION_URI, CONFIG.OPTIONS);
