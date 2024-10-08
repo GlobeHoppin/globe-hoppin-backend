@@ -5,14 +5,12 @@ const UserProfileSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Name is required"],
       minlength: [2, "Name must be at least 2 characters long"],
     },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
       default: "Male",
-      required: [true, "Gender is required"],
     },
     age: {
       type: Number,
@@ -21,7 +19,6 @@ const UserProfileSchema = new mongoose.Schema(
     },
     country: {
       type: String,
-      required: [true, "Country is required"],
     },
     email: {
       type: String,
@@ -34,18 +31,19 @@ const UserProfileSchema = new mongoose.Schema(
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters long"],
     },
+    confirmPassword: {
+      type: String,
+    },
     isEmailVerified: {
       type: Boolean,
       default: false,
     },
     phoneNumber: {
       type: String,
-      required: [true, "Phone number is required"],
       minlength: [10, "Phone number must be at least 10 digits long"],
     },
     countryCode: {
       type: String,
-      required: [true, "Country code is required"],
       match: [/^\+\d{1,3}$/, "Invalid country code format"], // Must start with + and digits
     },
     description: {
@@ -76,8 +74,8 @@ const UserProfileSchema = new mongoose.Schema(
       type: String,
       default: "English",
     },
-    recentActivity: Date,
 
+    recentActivity: Date,
     // Relationship: User has many pins (array of ObjectIds referencing Pin collection)
     pins: [{ type: mongoose.Schema.Types.ObjectId, ref: "Pin" }],
   },
