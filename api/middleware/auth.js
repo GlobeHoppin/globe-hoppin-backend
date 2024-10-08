@@ -11,7 +11,7 @@ export const validateToken = async (req, res, next) => {
     if (!token) {
       return res
         .status(401)
-        .json({ message: "No token provided", status: 401 });
+        .json({ message: "No token provided for authorization", status: 401 });
     }
 
     const decoded = jwt.verify(token, secret);
@@ -19,9 +19,30 @@ export const validateToken = async (req, res, next) => {
       return res.status(401).json({ message: "Token expired", status: 401 });
     }
     req.user = decoded.data;
-    next()
+    next();
   } catch (error) {
-    return res.status(401).json({ message: 'Token is expried.' })
+    return res.status(401).json({ message: error.message });
+  }
+};
+
+export const accessToken = async (req, res, next) => {
+  try {
+    const token = req.headers["accesstoken"] || req.headers["accessToken"];
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "No token provided for accesstoken", status: 401 });
+    }
+
+    const decoded = jwt.verify(token, secret);
+    if (decoded.exp < Math.floor(Date.now() / 1000)) {
+      return res.status(401).json({ message: "Token expired", status: 401 });
+    }
+    req.access = decoded.data;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: error.message });
   }
 };
 
@@ -30,10 +51,10 @@ export const checkAuthorisation = async (req, res, next) => {
   try {
     const user = req.user;
     if (!user) {
-      return res.status(401).json({ message: 'Unauthorized' })
+      return res.status(401).json({ message: "Unauthorized" });
     }
-    next()
+    next();
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized' })
+    return res.status(401).json({ message: "Unauthorized" });
   }
-}
+};
