@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const secret = process.env.SECRET;
 
-export const validateToken = async (req, res, next) => {
+ const validateToken = async (req, res, next) => {
   try {
     const {
       headers: { authorization = "", "x-access-token": xAccessToken = "" } = {},
@@ -26,7 +26,7 @@ export const validateToken = async (req, res, next) => {
 };
 
 // TODO: Check authorization of pin to update and delete
-export const checkAuthorisation = async (req, res, next) => {
+ const checkAuthorisation = async (req, res, next) => {
   try {
     const user = req.user;
     if (!user) {
@@ -37,3 +37,5 @@ export const checkAuthorisation = async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 };
+
+module.exports = { validateToken, checkAuthorisation };

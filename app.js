@@ -1,15 +1,15 @@
 "use strict";
 
-import Express from "express";
-import bodyParser from "body-parser";
-import cors from "cors"; // Import cors package
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors"); // Import cors package
 
-import Routes from "./api/routes";
-import startServer from "./startServer";
+const Routes = require("./api/routes");
+const startServer = require("./startServer");
 
-const app = new Express();
+const app = express();
 
-//added cors to avoid cors error
+// Added cors to avoid cors error
 app.use(cors());
 
 // Support parsing of application/json type post data
@@ -24,4 +24,4 @@ Routes.init(app);
 // Start Server
 startServer(app);
 
-module.export = app;
+module.exports = app;

@@ -1,6 +1,6 @@
-import Express from 'express'
-import User from '../model/user'
-const HealthRouter = new Express.Router()
+const Express=require("express");
+const User = require("../model/user");
+const HealthRouter = Express.Router();
 
 HealthRouter.get('/', async (req, res, next) => {
     return res.status(200).json({
@@ -9,4 +9,4 @@ HealthRouter.get('/', async (req, res, next) => {
     })
 })
 
-export default HealthRouter
+module.exports = HealthRouter;

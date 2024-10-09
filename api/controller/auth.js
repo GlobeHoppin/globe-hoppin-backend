@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-import { createUser, getUser } from "../model/user";
+const { createUser, getUser } = require("../model/user");
 
 const secret = process.env.SECRET;
 
@@ -132,4 +132,4 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-export { generateToken, validateToken, signin, signup, logout, verifyEmail };
+module.exports =  { generateToken, validateToken, signin, signup, logout, verifyEmail };

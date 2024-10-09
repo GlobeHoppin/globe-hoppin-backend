@@ -1,5 +1,5 @@
-import express from "express";
-import NotificationService from "../controller/notification";
+const express = require("express");
+const NotificationService = require("../controller/notification");
 
 const NotificationRouter = express.Router();
 const notificationService = new NotificationService();
@@ -45,4 +45,4 @@ NotificationRouter.post("/email", async (req, res) => {
   }
 });
 
-export default NotificationRouter;
+module.exports = NotificationRouter;
