@@ -3,8 +3,10 @@ const secret = process.env.SECRET;
 
 export const validateToken = async (req, res, next) => {
   try {
-    const { headers: { authorization = "", "x-access-token": xAccessToken = "" } } = req;
-    const token = xAccessToken || authorization;
+    const {
+      headers: { authorization = "", "x-access-token": xAccessToken = "" },
+    } = req;
+    const token = xAccessToken || authorization
 
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
@@ -15,7 +17,7 @@ export const validateToken = async (req, res, next) => {
       return res.status(401).json({ message: "Token expired" });
     }
 
-    req.user = decoded.data; 
+    req.user = decoded.data;
     next();
   } catch (error) {
     console.error(error);
