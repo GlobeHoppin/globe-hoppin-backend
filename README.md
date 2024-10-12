@@ -156,4 +156,12 @@ git checkout main
 git pull origin main
 ```
 
----
+
+## Thanks to our contributors 🙌🏻
+
+<a href="https://github.com/GlobeHoppin/globe-hoppin-backend/graphs/contributors">
+  <img align="center" src="https://contrib.rocks/image?max=100&repo=GlobeHoppin/globe-hoppin-backend" />
+</a>
+
+
+
