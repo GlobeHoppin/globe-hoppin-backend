@@ -1,6 +1,6 @@
 const User = require("../model/user");
 
-export const getUserProfile = async (req, res) => {
+const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).populate("pins");
     if (!user) {
@@ -12,3 +12,5 @@ export const getUserProfile = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+module.exports = { getUserProfile };
