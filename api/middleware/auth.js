@@ -25,27 +25,6 @@ export const validateToken = async (req, res, next) => {
   }
 };
 
-export const accessToken = async (req, res, next) => {
-  try {
-    const token = req.headers["accesstoken"] || req.headers["accessToken"];
-
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "No token provided accesstoken", status: 401 });
-    }
-
-    const decoded = jwt.verify(token, secret);
-    if (decoded.exp < Math.floor(Date.now() / 1000)) {
-      return res.status(401).json({ message: "Token expired", status: 401 });
-    }
-    req.access = decoded.data;
-    next();
-  } catch (error) {
-    return res.status(401).json({ message: "Token is expried." });
-  }
-};
-
 // TODO: Check authorization of pin to update and delete
 export const checkAuthorisation = async (req, res, next) => {
   try {

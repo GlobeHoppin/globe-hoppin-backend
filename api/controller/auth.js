@@ -1,36 +1,23 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { check, validationResult } = require("express-validator");
 
 import { createUser, getUser, updateUser } from "../model/user";
 
 const secret = process.env.SECRET;
+const accessToken_Expairy = process.env.ACCESS_TOKEN_EXPAIRY;
+const refreshToken_Expairy = process.env.REFRESH_TOKEN_EXPAIRY;
 
-// Refresh Token 1day
-const generateToken = (user) => {
-  console.log(process.env.TOKEN_EXPIRY);
+// Refresh Token & Access Token
+const generateToken = (user, exp_time) => {
   const payload = {
-    exp: Math.floor(Date.now() / 1000) + parseInt(process.env.TOKEN_EXPIRY),
+    exp: Math.floor(Date.now() / 1000) + parseInt(exp_time),
     data: user,
   };
   try {
     return jwt.sign(payload, secret);
   } catch (error) {
     console.error("[Error] Failed to generate token:", error);
-    throw error;
-  }
-};
-
-// Access Token 1hr
-const generateAccessToken = (access) => {
-  const payload = {
-    exp:
-      Math.floor(Date.now() / 1000) + parseInt(process.env.ACCESS_TOKEN_EXPIRY),
-    data: access,
-  };
-  try {
-    return jwt.sign(payload, secret);
-  } catch (error) {
-    console.error("[Error] Failed to generate Access token:", error);
     throw error;
   }
 };
@@ -69,12 +56,12 @@ const signup = async (req, res) => {
 
     const user = await createUser(data);
 
-    const refreshToken = generateToken(user);
-    const accessToken = generateAccessToken(email);
+    const refreshToken = generateToken(user, refreshToken_Expairy);
+    const accessToken = generateToken(email, accessToken_Expairy);
     return res.status(201).json({
       success: true,
-      refreshToken: refreshToken,
-      accessToken: accessToken,
+      refreshToken,
+      accessToken,
     });
   } catch (error) {
     const { name, message, code } = error;
@@ -96,8 +83,52 @@ const signup = async (req, res) => {
   }
 };
 
+// Express Validator Validation For Create Profile
+const validateProfile = [
+  check("email").isEmail().withMessage("Please Enter a Valid Email"),
+  check("name")
+    .notEmpty()
+    .isLength({ min: 2 })
+    .withMessage("Name must be at least 2 characters long"),
+  check("gender").notEmpty().withMessage("Gender is required"),
+  check("age")
+    .isInt({ min: 1, max: 120 })
+    .withMessage("Please enter a valid age"),
+  check("country")
+    .notEmpty()
+    .isLength({ min: 2 })
+    .withMessage("Country is required"),
+  check("phoneNumber")
+    .isInt({ min: 10 })
+    .withMessage("Phone number must be at least 10 digits long")
+    .matches(/^\d+$/)
+    .withMessage("Phone Number must contain only digits"),
+  check("countryCode")
+    .matches(/^\+\d{1,3}$/)
+    .withMessage("Invalid country code format"),
+  check("description")
+    .notEmpty()
+    .isLength({ max: 200 })
+    .withMessage("Description is required"),
+  check("socialMediaLink")
+    .isURL()
+    .matches(
+      /^https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}\/[a-zA-Z0-9\-]+$/
+    )
+    .withMessage("Please enter a valid URL for Social Media Link"),
+  check("profilePicture")
+    .isURL()
+    .matches(/^https?:\/\/.+\.(jpg|jpeg|png)$/)
+    .withMessage("Please enter a valid URL for Profile Picture"),
+];
+
 const createProfile = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
     const {
       email,
       name,
@@ -110,24 +141,6 @@ const createProfile = async (req, res) => {
       socialMediaLink,
       profilePicture,
     } = req.body;
-
-    if (!email) {
-      return res.status(400).json({ message: "Please Enter Email" });
-    }
-
-    if (
-      (!name,
-      !gender,
-      !age,
-      !country,
-      !phoneNumber,
-      !countryCode,
-      !description,
-      !socialMediaLink,
-      !profilePicture)
-    ) {
-      return res.status(400).json({ message: "Please Fill All Fields" });
-    }
 
     // Find the user by email
     const userData = await getUser({ email });
@@ -161,7 +174,6 @@ const createProfile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-
     res.status(500).json({ message: error.message });
   }
 };
@@ -192,7 +204,7 @@ const signin = async (req, res) => {
       return res.status(400).json({ error: "Email or Phone Number required" });
     }
 
-    const token = generateToken(user);
+    const token = generateToken(user,refreshToken_Expairy);
     return res
       .status(200)
       .json({ success: true, message: `welcome back`, token });
@@ -255,9 +267,10 @@ const verifyEmail = async (req, res) => {
 export {
   generateToken,
   validateToken,
-  signin,
-  createProfile,
   signup,
+  signin,
+  validateProfile,
+  createProfile,
   logout,
   verifyEmail,
 };

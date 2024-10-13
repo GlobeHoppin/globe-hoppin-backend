@@ -5,7 +5,6 @@ const UserProfileSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      minlength: [2, "Name must be at least 2 characters long"],
     },
     gender: {
       type: String,
@@ -14,8 +13,6 @@ const UserProfileSchema = new mongoose.Schema(
     },
     age: {
       type: Number,
-      min: [0, "Age must be at least 0"],
-      max: [120, "Age must be less than 120"],
     },
     country: {
       type: String,
@@ -44,22 +41,15 @@ const UserProfileSchema = new mongoose.Schema(
     },
     countryCode: {
       type: String,
-      match: [/^\+\d{1,3}$/, "Invalid country code format"], // Must start with + and digits
     },
     description: {
       type: String,
-      maxlength: [200, "Description cannot be longer than 200 characters"],
     },
     socialMediaLink: {
       type: String,
-      match: [
-        /^https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}\/[a-zA-Z0-9\-]+$/,
-        "Invalid social media link",
-      ],
     },
     profilePicture: {
       type: String,
-      match: [/^https?:\/\/.+\.(jpg|jpeg|png)$/, "Invalid image URL"], // URL format for image
     },
     dateOfRegistration: {
       type: Date,

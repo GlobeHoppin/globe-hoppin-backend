@@ -5,12 +5,13 @@ import {
   signup,
   createProfile,
   verifyEmail,
+  validateProfile,
 } from "../controller";
-import { accessToken, validateToken } from "../middleware/auth";
+import { validateToken } from "../middleware/auth.js";
 const AuthRouter = new Express.Router();
 
 AuthRouter.post("/signin", signin);
-AuthRouter.post("/profile", accessToken, validateToken, createProfile);
+AuthRouter.post("/profile", validateToken, validateProfile, createProfile);
 AuthRouter.post("/signup", signup);
 // will use this once we start sending verification email
 AuthRouter.get("/verify/:token", verifyEmail);
