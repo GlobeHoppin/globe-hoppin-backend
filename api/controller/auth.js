@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-
+require("dotenv").config();
 const { createUser, getUser } = require("../model/user");
 
 const secret = process.env.SECRET;
@@ -168,8 +168,33 @@ const forgotPassword = async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: "Password reset email sent" });
   } catch (error) {
+    console.log(error);
+    
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = { generateToken, validateToken, signin, signup, logout, verifyEmail, forgotPassword };
+const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+  try {
+    const user = await getUser({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+    if (!user) {
+      return res.status(400).json({ error: "Password reset token is invalid or has expired" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.status(200).json({ message: "Password has been reset" });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { generateToken, validateToken, signin, signup, logout, verifyEmail, forgotPassword, resetPassword };
