@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+
+const mongoose = require("mongoose");
 
 // Define the UserProfile schema with validation rules
 const UserProfileSchema = new mongoose.Schema(
@@ -76,20 +77,23 @@ const UserProfileSchema = new mongoose.Schema(
       type: String,
       default: "English",
     },
+    resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
     recentActivity: Date,
 
     // Relationship: User has many pins (array of ObjectIds referencing Pin collection)
     pins: [{ type: mongoose.Schema.Types.ObjectId, ref: "Pin" }],
   },
-  { timestamps: true }
+  { timestamps: true },
+  
 );
 
 const User = mongoose.model("User", UserProfileSchema);
 
-export default User;
+
 
 // Get all users
-export const getAllUsers = async (query = {}, select = {}) => {
+const getAllUsers = async (query = {}, select = {}) => {
   try {
     const users = await User.find(query, select).sort({ createdAt: -1 });
     return users;
@@ -100,7 +104,7 @@ export const getAllUsers = async (query = {}, select = {}) => {
 };
 
 // Get a single user
-export const getUserById = async (id, select = {}) => {
+ const getUserById = async (id, select = {}) => {
   try {
     const user = await User.findById(id, select);
     return user;
@@ -111,7 +115,7 @@ export const getUserById = async (id, select = {}) => {
 };
 
 // Get a single user
-export const getUser = async (query, select = {}) => {
+ const getUser = async (query, select = {}) => {
   try {
     const user = await User.findOne(query, select);
     return user;
@@ -122,7 +126,7 @@ export const getUser = async (query, select = {}) => {
 };
 
 // Create a new user
-export const createUser = async (user) => {
+ const createUser = async (user) => {
   try {
     const newUser = await User.create(user);
     return newUser;
@@ -133,7 +137,7 @@ export const createUser = async (user) => {
 };
 
 // Update a user
-export const updateUser = async (id, user) => {
+const updateUser = async (id, user) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(id, user, {
       new: true,
@@ -146,7 +150,7 @@ export const updateUser = async (id, user) => {
 };
 
 // Delete a user
-export const deleteUser = async (id) => {
+ const deleteUser = async (id) => {
   try {
     await User.findByIdAndRemove(id);
   } catch (error) {
@@ -155,3 +159,12 @@ export const deleteUser = async (id) => {
   }
 };
 
+module.exports = {
+  getAllUsers,
+  getUserById,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
+  User,
+}

@@ -1,17 +1,16 @@
-// api/routes/pin.js
-import Express from "express";
-import { checkAuthorisation, validateToken } from "../middleware";
-import { addNewPin, getPin, updateUserPin, deleteUserPin } from "../controller";
+const express = require("express");
+const { checkAuthorisation, validateToken } = require("../middleware");
+const { addNewPin, getPin, updateUserPin, deleteUserPin } = require("../controller");
 
-const PinRouter = new Express.Router();
+const PinRouter = express.Router();
 
 // Create a new pin
 PinRouter.post("/", validateToken, addNewPin);
 // Update a pin
-PinRouter.put("/:id", validateToken, checkAuthorisation, updateUserPin );
+PinRouter.put("/:id", validateToken, checkAuthorisation, updateUserPin);
 // Get a pin
 PinRouter.get("/:id", validateToken, getPin);
 // Delete a pin
 PinRouter.delete("/:id", validateToken, checkAuthorisation, deleteUserPin);
 
-export default PinRouter;
+module.exports = PinRouter;

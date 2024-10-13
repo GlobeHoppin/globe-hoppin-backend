@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const PinSchema = new mongoose.Schema(
   {
@@ -113,10 +113,8 @@ const PinSchema = new mongoose.Schema(
 
 const Pin = mongoose.model("Pin", PinSchema);
 
-export default Pin;
-
 // create a new pin
-export const createPin = async (pin) => {
+const createPin = async (pin) => {
   try {
     const newPin = await Pin.create(pin);
     return newPin;
@@ -127,7 +125,7 @@ export const createPin = async (pin) => {
 };
 
 // get all pins
-export const getAllPins = async (query = {}, select = []) => {
+ const getAllPins = async (query = {}, select = []) => {
   const selectObj =
     select.length > 0
       ? select.reduce((obj, key) => {
@@ -146,7 +144,7 @@ export const getAllPins = async (query = {}, select = []) => {
 };
 
 // get a single pin
-export const getPinById = async (id, select = []) => {
+const getPinById = async (id, select = []) => {
   const selectObj =
     select.length > 0
       ? select.reduce((obj, key) => {
@@ -165,7 +163,7 @@ export const getPinById = async (id, select = []) => {
 };
 
 // update a pin
-export const updatePin = async (id, pinDataToUpdate) => {
+ const updatePin = async (id, pinDataToUpdate) => {
   try {
     const updatedPin = await Pin.findByIdAndUpdate(id, pinDataToUpdate, {
       new: true,
@@ -178,7 +176,7 @@ export const updatePin = async (id, pinDataToUpdate) => {
 };
 
 // delete a pin
-export const deletePin = async (id) => {
+const deletePin = async (id) => {
   try {
     const deletedPin = await Pin.findByIdAndRemove(id);
     return deletedPin;
@@ -186,4 +184,13 @@ export const deletePin = async (id) => {
     console.log(error);
     throw error;
   }
+};
+
+module.exports = {
+  Pin,
+  createPin,
+  getAllPins,
+  getPinById,
+  updatePin,
+  deletePin,
 };

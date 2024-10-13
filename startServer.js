@@ -1,4 +1,6 @@
-import MONGO_CONFIG from "./database";
+"use strict";
+
+const MONGO_CONFIG = require("./database");
 
 const PORT = process.env.PORT || 3000;
 
@@ -16,4 +18,4 @@ const startServer = async (app) => {
   }
 };
 
-export default startServer
+module.exports = startServer;

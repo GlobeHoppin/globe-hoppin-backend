@@ -1,8 +1,9 @@
-import AuthRouter from "./auth";
-import HealthRouter from "./health";
-import PinRouter from "./pin";
-import UserRouter from "./user";
-import NotificationRouter from "./notification";
+
+const AuthRouter = require("./auth");
+const HealthRouter = require("./health");
+const PinRouter = require("./pin");
+const UserRouter = require("./user");
+const NotificationRouter = require("./notification");
 
 const Routes = [
   { path: "/", router: HealthRouter },
@@ -32,4 +33,4 @@ Routes.init = (app) => {
   });
 };
 
-export default Routes;
+module.exports = Routes;

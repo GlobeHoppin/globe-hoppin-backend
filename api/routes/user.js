@@ -1,9 +1,10 @@
-import Express from "express";
-import { validateToken } from "../middleware/auth";
-import { getUserProfile } from "../controller";
 
-const UserRouter = new Express.Router();
+const express = require("express");
+const { validateToken } = require("../middleware/auth");
+const { getUserProfile } = require("../controller");
+
+const UserRouter = express.Router();
 
 UserRouter.get("/", validateToken, getUserProfile);
 
-export default UserRouter;
+module.exports = UserRouter;

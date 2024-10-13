@@ -1,5 +1,5 @@
-import { createPin } from "../model";
-import User from "../model/user";
+const  { createPin } =require("../model/pin");
+const User= require("../model/user");
 
 const addNewPin = async (req, res) => {
   const { body = {} } = req;
@@ -86,4 +86,4 @@ const deleteUserPin = async (req, res) => {
   }
 };
 
-export { addNewPin, updateUserPin, getPin, deleteUserPin };
+module.exports= { addNewPin, updateUserPin, getPin, deleteUserPin };
