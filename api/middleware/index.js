@@ -1,1 +1,5 @@
-export * from './auth'
+const auth = require('./auth')
+
+module.exports = {
+    ...auth
+}
