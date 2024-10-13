@@ -77,12 +77,15 @@ const UserProfileSchema = new mongoose.Schema(
       type: String,
       default: "English",
     },
+    resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date },
     recentActivity: Date,
 
     // Relationship: User has many pins (array of ObjectIds referencing Pin collection)
     pins: [{ type: mongoose.Schema.Types.ObjectId, ref: "Pin" }],
   },
-  { timestamps: true }
+  { timestamps: true },
+  
 );
 
 const User = mongoose.model("User", UserProfileSchema);
