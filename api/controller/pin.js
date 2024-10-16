@@ -3,12 +3,6 @@ import { createPin, deletePin, getPinById, updatePin } from "../model";
 import User from "../model/user";
 
 const addNewPin = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.error("Validation errors:", errors.array());
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { body } = req;
 
   try {
@@ -51,12 +45,6 @@ const addNewPin = async (req, res) => {
 };
 
 const updateUserPin = async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    console.error("Validation errors:", errors.array());
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const {
     params: { id },
     body,
@@ -108,7 +96,9 @@ const updateUserPin = async (req, res) => {
 };
 
 const getPin = async (req, res) => {
-  const { params: { id } } = req;
+  const {
+    params: { id },
+  } = req;
 
   try {
     const pin = await getPinById(id);
@@ -118,29 +108,41 @@ const getPin = async (req, res) => {
     return res.status(200).json({ pin });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Failed to retrieve pin", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to retrieve pin", error: error.message });
   }
 };
 
 const deleteUserPin = async (req, res) => {
-  const { params: { id } } = req;
+  const {
+    params: { id },
+  } = req;
 
   try {
     const user = req.user;
     const deletedPin = await deletePin(id);
-    
+
     if (!deletedPin) {
       return res.status(404).json({ message: "Pin not found" });
     }
     if (deletedPin.user.toString() !== user._id.toString()) {
-      return res.status(403).json({ message: "Forbidden: You do not have permission to delete this pin." });
+      return res
+        .status(403)
+        .json({
+          message: "Forbidden: You do not have permission to delete this pin.",
+        });
     }
 
     await User.findByIdAndUpdate(user._id, { $pull: { pins: deletedPin._id } });
-    return res.status(200).json({ message: "Pin deleted successfully", deletedPin });
+    return res
+      .status(200)
+      .json({ message: "Pin deleted successfully", deletedPin });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Failed to delete pin", error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Failed to delete pin", error: error.message });
   }
 };
 

@@ -1,7 +1,8 @@
 // api/routes/pin.js
 import Express from "express";
-import { checkAuthorisation, validatePin, validateToken, validateUpdatePin } from "../middleware";
+import { checkAuthorisation, validateToken, validateUpdatePin } from "../middleware";
 import { addNewPin, getPin, updateUserPin, deleteUserPin } from "../controller";
+import { validatePin } from "../middleware/pin";
 
 const PinRouter = new Express.Router();
 
