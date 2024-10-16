@@ -1,4 +1,4 @@
-const { check, param, body } = require("express-validator");
+const { check, param, body, validationResult } = require("express-validator");
 
 export const validatePin = [
   check("latitude")

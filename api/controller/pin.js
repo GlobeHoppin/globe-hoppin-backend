@@ -1,4 +1,4 @@
-import { validationResult } from "express-validator";
+
 import { createPin, deletePin, getPinById, updatePin } from "../model";
 import User from "../model/user";
 
