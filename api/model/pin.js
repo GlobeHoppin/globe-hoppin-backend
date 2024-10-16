@@ -14,6 +14,11 @@ const PinSchema = new mongoose.Schema(
       min: [-180, "Longitude must be between -180 and 180"],
       max: [180, "Longitude must be between -180 and 180"],
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     color: {
       type: String,
       match: [/^#[0-9A-F]{6}$/i, "Color must be in hex format (e.g., #FFFFFF)"],
@@ -36,23 +41,15 @@ const PinSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    tags: [
-      {
-        type: String,
-        enum: [
-          "travel",
-          "food",
-          "beach",
-          "hiking",
-          "culture",
-          "nightlife",
-          "shopping",
-          "adventure",
-          "relaxation",
-        ],
-        maxlength: [50, "Tag cannot be longer than 50 characters"],
-      },
-    ],
+    tags: [{
+      type: String,
+      enum: [
+        "travel", "food", "beach", "hiking", 
+        "culture", "nightlife", "shopping", 
+        "adventure", "relaxation",
+      ],
+      maxlength: [50, "Tag cannot be longer than 50 characters"],
+    }],
     rating: {
       type: Number,
       min: [1, "Rating must be at least 1"],
@@ -63,19 +60,15 @@ const PinSchema = new mongoose.Schema(
       enum: ["public", "private", "shared"],
       default: "public",
     },
-    photos: [
-      {
-        type: String,
-        match: [/^https?:\/\/.+\.(jpg|jpeg|png)$/, "Invalid image URL"], // URL format for images
-      },
-    ],
+    photos: [{
+      type: String,
+      match: [/^https?:\/\/.+\.(jpg|jpeg|png)$/, "Invalid image URL"],
+    }],
     pinCategory: {
       type: String,
       enum: ["Favorite", "Visited", "Wishlist"],
       default: "Visited",
     },
-
-    // Expanded pin details
     travelDates: {
       startDate: {
         type: Date,
@@ -92,33 +85,30 @@ const PinSchema = new mongoose.Schema(
         },
       },
     },
-    places: [
-      {
-        locationName: {
-          type: String,
-          required: [true, "Location name is required"],
-        },
-        address: {
-          type: String,
-          required: [true, "Address is required"],
-        },
+    places: [{
+      locationName: {
+        type: String,
+        required: [true, "Location name is required"],
       },
-    ],
+      address: {
+        type: String,
+        required: [true, "Address is required"],
+      },
+    }],
     images: [{ type: String }],
     memories: [{ type: String }],
     journal: { type: String },
   },
-  { Timestamp: true }
+  { timestamps: true } 
 );
 
 const Pin = mongoose.model("Pin", PinSchema);
 
 export default Pin;
 
-// create a new pin
-export const createPin = async (pin) => {
+export const createPin = async (pin, userId) => {
   try {
-    const newPin = await Pin.create(pin);
+    const newPin = await Pin.create({ ...pin, user: userId });
     return newPin;
   } catch (error) {
     console.log(error);
@@ -126,7 +116,6 @@ export const createPin = async (pin) => {
   }
 };
 
-// get all pins
 export const getAllPins = async (query = {}, select = []) => {
   const selectObj =
     select.length > 0
@@ -145,7 +134,6 @@ export const getAllPins = async (query = {}, select = []) => {
   }
 };
 
-// get a single pin
 export const getPinById = async (id, select = []) => {
   const selectObj =
     select.length > 0
@@ -164,7 +152,6 @@ export const getPinById = async (id, select = []) => {
   }
 };
 
-// update a pin
 export const updatePin = async (id, pinDataToUpdate) => {
   try {
     const updatedPin = await Pin.findByIdAndUpdate(id, pinDataToUpdate, {
@@ -177,10 +164,9 @@ export const updatePin = async (id, pinDataToUpdate) => {
   }
 };
 
-// delete a pin
 export const deletePin = async (id) => {
   try {
-    const deletedPin = await Pin.findByIdAndRemove(id);
+    const deletedPin = await Pin.findByIdAndDelete(id);
     return deletedPin;
   } catch (error) {
     console.log(error);
