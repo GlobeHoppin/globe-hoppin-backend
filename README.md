@@ -1,100 +1,167 @@
-# Project Setup and Running Locally
+# GlobeHoppin Backend
+
+Welcome to the backend repository for GlobeHoppin, a project built using Node.js, Express, and MongoDB. This document provides instructions on setting up the project, running it locally, and contributing to the codebase.
 
 ## Prerequisites
-- Ensure you have [Node.js](https://nodejs.org/) installed (version 14.x or later recommended).
-- Ensure you have [Git](https://git-scm.com/) installed.
 
-## Setup Instructions
+Before you begin, ensure you have the following installed:
 
-1. ### Star and Fork the Repo
-    - Feel free to Star:star: the repo, if you like it.
-    - Click on `fork` button in the right corner.It will create a copy of repository in your account.
-    - Creating the copy of repository
+- [Node.js](https://nodejs.org/) (version 14.x or later)
+- [Git](https://git-scm.com/)
 
-2. ### Clone the Repo
-    You can **clone** your repository in your local pc with use of **[Github_Desktop](https://desktop.github.com/)** application or for your [Terminal/bash](https://git-scm.com/downloads).
+## Project Setup and Running Locally
 
-   For **Terminal** -
+### 1. Star and Fork the Repository
 
-   ```bash
-   git clone https://github.com/GlobeHoppin/globe-hoppin-backend.git
-   ```
+- **Star**: If you like this project, please give it a star! ⭐
+- **Fork**: Click the `Fork` button at the top right corner to create a copy of the repository in your account.
 
-2. Navigate to the project directory
+### 2. Clone the Repository
 
-    ```bash
-    cd globe-hoppin-backend
-    ```
+Clone your forked repository to your local machine using Git or GitHub Desktop.
 
-3. Install dependencies
-    ```bash
-    npm install
-    ```
+#### Using Git (Terminal/Bash):
 
-4. Setup env variables - 
-    Create a `.env` file in the root directory of the project and add the following configuration values:
-    ```
-    PORT=8080
-    MONGO_DBNAME=
-    MONGO_HOSTS=27017
-    MONGO_USERNAME=
-    MONGO_PASSWORD=
-    SECRET=
-    TOKEN_EXPIRY=
-    ```
+```bash
+git clone https://github.com/your-username/globe-hoppin-backend.git
+```
 
-4. Run the application
-    ```bash
-    npm run dev -> to run with nodemon
+#### Using GitHub Desktop:
 
-    npm run start -> to run normally
-    ```
+1. Open GitHub Desktop and click on `File > Clone Repository`.
+2. Select the repository you just forked and clone it.
+
+### 3. Navigate to the Project Directory
+
+```bash
+cd globe-hoppin-backend
+```
+
+### 4. Install Dependencies
+
+Install the required dependencies using npm:
+
+```bash
+npm install
+```
+
+### 5. Set Up Environment Variables
+
+Create a `.env` file in the root directory of the project and add the following configuration values:
+
+```env
+PORT=8080
+MONGO_DBNAME=yourDatabaseName
+MONGO_HOSTS=localhost:27017
+MONGO_USERNAME=yourUsername
+MONGO_PASSWORD=yourPassword
+SECRET=yourSecretKey
+TOKEN_EXPIRY=3600
+```
+
+### 6. Run the Application
+
+You can run the application in development mode with nodemon or normally with npm:
+
+#### Development Mode (with nodemon):
+
+```bash
+npm run dev
+```
+
+#### Normal Mode:
+
+```bash
+npm start
+```
 
 ## Contributing
-* Fork the repository. 
-* Create a new issue or select an existing one. Make sure you start working only after creating the issue.
-* Create a new **branch**. - Make careful to add the issue number while creating the branch.
 
-   ```bash
-   git checkout -b 'branch_name - issue number'
-   ```
-* Make your changes.
-* Commit your changes, making sure to include the issue number in the commit message.
-    ```bash
-    git commit -m 'commit message #issue number'
-    ```
-* Push to the branch 
-    ```bash
-    git push origin <your-branch-name>
-    ```
-* Open a pull request.
+We welcome contributions to improve GlobeHoppin. To contribute, follow these steps:
 
-## Note
-* Try to squash all your commits into one while addresing the request changes.
-* Always try to `rebase` with `main` branch instead of `merge`
-    ```bash
-    git reset --soft $(git merge-base main HEAD)
-    git add .
-    git commit -m 'commit message'
-    git push origin <branch-name> --force-with-l
-    ```
+### 1. Fork the Repository
 
+Click the `Fork` button to create a copy of the repository in your account.
 
+### 2. Create a New Issue or Select an Existing One
 
-## How to Update
+Make sure to start working only after creating or selecting an issue.
 
-In the case when you kept the original repository git history, so you have to update your repo from remote to avoid conflict and update to date your repo with others work. 
-You can always pull and merge updates from the "upstream" repository back into your
-project by running:
+### 3. Create a New Branch
+
+Create a new branch for your work, including the issue number in the branch name (e.g., `edit-readme-14`):
 
 ```bash
-$ git fetch upstream            # Fetch (upstream) repository
-$ git checkout main             # Switch to the main branch (or, master branch)
-$ git merge upstream/main       # Merge upstream/master into the local branch
+git checkout -b 'edit-readme-14'
 ```
-**Or**
+
+### 4. Make Your Changes
+
+Implement your changes to the codebase.
+
+### 5. Commit Your Changes
+
+Commit your changes, including the issue number in the commit message:
+
 ```bash
-$ git checkout main             # Switch to the main branch (or, master branch)
-$ git pull origin main          # Fetch and Merge upstream/master into the local branch
+git commit -m 'Enhanced README.md #14'
 ```
-_ _ _
+
+### 6. Push to Your Branch
+
+Push your changes to your forked repository:
+
+```bash
+git push origin <your-branch-name>
+```
+
+### 7. Open a Pull Request
+
+Open a pull request to merge your changes into the main repository.
+
+### Note
+
+- **Squash Commits**: Try to squash all your commits into one before submitting your pull request.
+- **Rebase with Main**: Always rebase with the main branch instead of merging:
+
+  ```bash
+  git reset --soft $(git merge-base main HEAD)
+  git add .
+  git commit -m 'commit message'
+  git push origin <branch-name> --force-with-lease
+  ```
+
+## How to Update Your Fork
+
+To keep your fork updated with the original repository, you need to pull and merge updates from the upstream repository:
+
+```bash
+# Fetch upstream repository
+git fetch upstream
+
+# Switch to main branch
+git checkout main
+
+# Merge upstream changes into your local main branch
+git merge upstream/main
+```
+
+Or using a single command:
+
+```bash
+# Switch to main branch
+git checkout main
+
+# Pull and merge upstream changes
+git pull origin main
+```
+
+
+## Thanks to our contributors 🙌🏻
+
+<a href="https://github.com/GlobeHoppin/globe-hoppin-backend/graphs/contributors">
+  <img align="center" src="https://contrib.rocks/image?max=100&repo=GlobeHoppin/globe-hoppin-backend" />
+</a>
+
+
+
