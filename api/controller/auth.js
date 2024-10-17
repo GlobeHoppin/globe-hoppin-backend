@@ -1,14 +1,17 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { check, validationResult } = require("express-validator");
 
-import { createUser, getUser } from "../model/user";
+import { createUser, getUser, updateUser } from "../model/user";
 
 const secret = process.env.SECRET;
+const accessToken_Expairy = process.env.ACCESS_TOKEN_EXPAIRY;
+const refreshToken_Expairy = process.env.REFRESH_TOKEN_EXPAIRY;
 
-const generateToken = (user) => {
-  console.log(process.env.TOKEN_EXPIRY);
+// Refresh Token & Access Token
+const generateToken = (user, exp_time) => {
   const payload = {
-    exp: Math.floor(Date.now() / 1000) + parseInt(process.env.TOKEN_EXPIRY),
+    exp: Math.floor(Date.now() / 1000) + parseInt(exp_time),
     data: user,
   };
   try {
@@ -35,12 +38,31 @@ const validateToken = (token) => {
 const signup = async (req, res) => {
   try {
     const { body = {} } = req;
-    const { password = "" } = body;
+    const { email, password, confirmPassword } = body;
+
+    if (!confirmPassword) {
+      return res.status(400).json({ message: "Confirm Password Required" });
+    }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    body.password = hashedPassword;
-    const user = await createUser(body);
-    const token = generateToken(user);
-    return res.status(201).json({ token });
+    // UnSave Confirm Password
+    const data = {
+      email,
+      password: hashedPassword,
+    };
+
+    const user = await createUser(data);
+
+    const refreshToken = generateToken(user, refreshToken_Expairy);
+    const accessToken = generateToken(email, accessToken_Expairy);
+    return res.status(201).json({
+      success: true,
+      refreshToken,
+      accessToken,
+    });
   } catch (error) {
     const { name, message, code } = error;
     let status = 500;
@@ -61,21 +83,131 @@ const signup = async (req, res) => {
   }
 };
 
+// Express Validator Validation For Create Profile
+const validateProfile = [
+  check("email").isEmail().withMessage("Please Enter a Valid Email"),
+  check("name")
+    .notEmpty()
+    .isLength({ min: 2 })
+    .withMessage("Name must be at least 2 characters long"),
+  check("gender").notEmpty().withMessage("Gender is required"),
+  check("age")
+    .isInt({ min: 1, max: 120 })
+    .withMessage("Please enter a valid age"),
+  check("country")
+    .notEmpty()
+    .isLength({ min: 2 })
+    .withMessage("Country is required"),
+  check("phoneNumber")
+    .isInt({ min: 10 })
+    .withMessage("Phone number must be at least 10 digits long")
+    .matches(/^\d+$/)
+    .withMessage("Phone Number must contain only digits"),
+  check("countryCode")
+    .matches(/^\+\d{1,3}$/)
+    .withMessage("Invalid country code format"),
+  check("description")
+    .notEmpty()
+    .isLength({ max: 200 })
+    .withMessage("Description is required"),
+  check("socialMediaLink")
+    .isURL()
+    .matches(
+      /^https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}\/[a-zA-Z0-9\-]+$/
+    )
+    .withMessage("Please enter a valid URL for Social Media Link"),
+  check("profilePicture")
+    .isURL()
+    .matches(/^https?:\/\/.+\.(jpg|jpeg|png)$/)
+    .withMessage("Please enter a valid URL for Profile Picture"),
+];
+
+const createProfile = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+      email,
+      name,
+      gender,
+      age,
+      country,
+      phoneNumber,
+      countryCode,
+      description,
+      socialMediaLink,
+      profilePicture,
+    } = req.body;
+
+    // Find the user by email
+    const userData = await getUser({ email });
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update the user profile
+    const updateData = await updateUser(
+      userData._id,
+      {
+        $set: {
+          name,
+          gender,
+          age,
+          country,
+          phoneNumber,
+          countryCode,
+          description,
+          socialMediaLink,
+          profilePicture,
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      updateData,
+      message: "Profile updated successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const signin = async (req, res) => {
   try {
     const {
-      body: { email = "", password = "" },
+      body: { email = "", password = "", phoneNumber = "" },
     } = req;
-    const user = await getUser({ email });
-    if (!user) {
-      return res.status(404).json({ error: "Incorrect email" });
+
+    let user;
+
+    if (email) {
+      user = await getUser({ email });
+      if (!user) {
+        return res.status(404).json({ error: "Incorrect email" });
+      }
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ error: "Incorrect password" });
+      }
+    } else if (phoneNumber) {
+      user = await getUser({ phoneNumber });
+      if (!user) {
+        return res.status(404).json({ error: "Phone number not found" });
+      }
+    } else {
+      return res.status(400).json({ error: "Email or Phone Number required" });
     }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: "Incorrect password" });
-    }
-    const token = generateToken(user);
-    return res.status(200).json({ token });
+
+    const token = generateToken(user,refreshToken_Expairy);
+    return res
+      .status(200)
+      .json({ success: true, message: `welcome back`, token });
   } catch (error) {
     const { name, message, code } = error;
     let status = 500;
@@ -132,4 +264,13 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-export { generateToken, validateToken, signin, signup, logout, verifyEmail };
+export {
+  generateToken,
+  validateToken,
+  signup,
+  signin,
+  validateProfile,
+  createProfile,
+  logout,
+  verifyEmail,
+};

@@ -11,7 +11,7 @@ export const validateToken = async (req, res, next) => {
     if (!token) {
       return res
         .status(401)
-        .json({ message: "No token provided", status: 401 });
+        .json({ message: "No token provided for authorization", status: 401 });
     }
 
     const decoded = jwt.verify(token, secret);
