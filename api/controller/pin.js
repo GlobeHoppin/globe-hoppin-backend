@@ -151,9 +151,7 @@ const deleteUserPin = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Failed to delete pin", error: error.message });
-    return res
-      .status(500)
-      .json({ message: "Failed to delete pin", error: error.message });
+   
 
   }
 };
