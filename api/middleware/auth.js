@@ -2,12 +2,15 @@ const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET;
 const { check, param ,body} = require('express-validator');
 
+
 export const validateToken = async (req, res, next) => {
   try {
+
     const {
       headers: { authorization = "", "x-access-token": xAccessToken = "" },
     } = req;
     const token = xAccessToken || authorization
+
 
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
@@ -19,6 +22,7 @@ export const validateToken = async (req, res, next) => {
     }
 
     req.user = decoded.data;
+
     next();
   } catch (error) {
     console.error(error);
