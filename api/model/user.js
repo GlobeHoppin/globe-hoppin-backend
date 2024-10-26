@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Define the UserProfile schema with validation rules
 const UserProfileSchema = new mongoose.Schema(
   {
     name: {

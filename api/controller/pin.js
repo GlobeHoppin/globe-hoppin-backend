@@ -5,6 +5,8 @@ import User from "../model/user";
 const addNewPin = async (req, res) => {
   const { body } = req;
 
+
+
   try {
     const user = req.user;
 
@@ -45,6 +47,7 @@ const addNewPin = async (req, res) => {
 };
 
 const updateUserPin = async (req, res) => {
+
   const {
     params: { id },
     body,
@@ -96,9 +99,11 @@ const updateUserPin = async (req, res) => {
 };
 
 const getPin = async (req, res) => {
+
   const {
     params: { id },
   } = req;
+
 
   try {
     const pin = await getPinById(id);
@@ -111,18 +116,21 @@ const getPin = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Failed to retrieve pin", error: error.message });
+
+    return res
+      .status(500)
+      .json({ message: "Failed to retrieve pin", error: error.message });
   }
 };
 
 const deleteUserPin = async (req, res) => {
-  const {
-    params: { id },
-  } = req;
+
+  const { params: { id } } = req;
+
 
   try {
     const user = req.user;
     const deletedPin = await deletePin(id);
-
     if (!deletedPin) {
       return res.status(404).json({ message: "Pin not found" });
     }
@@ -143,6 +151,8 @@ const deleteUserPin = async (req, res) => {
     return res
       .status(500)
       .json({ message: "Failed to delete pin", error: error.message });
+   
+
   }
 };
 
