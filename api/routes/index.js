@@ -3,13 +3,14 @@ import HealthRouter from "./health";
 import PinRouter from "./pin";
 import UserRouter from "./user";
 import NotificationRouter from "./notification";
-
+import ReviewRouter from "./review";
 const Routes = [
   { path: "/", router: HealthRouter },
   { path: "/auth", router: AuthRouter },
   { path: "/pin", router: PinRouter },
   { path: "/user", router: UserRouter },
   { path: "/notification", router: NotificationRouter },
+  { path: "/review", router: ReviewRouter }
 ];
 
 Routes.init = (app) => {
