@@ -5,13 +5,11 @@ const UserProfileSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, "Name is required"],
-      minlength: [2, "Name must be at least 2 characters long"],
+      minlength: [3, "Name must be at least 3 characters long"],
     },
     gender: {
       type: String,
       enum: ["Male", "Female", "Other"],
-      default: "Male",
-      required: [true, "Gender is required"],
     },
     age: {
       type: Number,
@@ -20,7 +18,6 @@ const UserProfileSchema = new mongoose.Schema(
     },
     country: {
       type: String,
-      required: [true, "Country is required"],
     },
     email: {
       type: String,
@@ -30,8 +27,7 @@ const UserProfileSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
-      minlength: [6, "Password must be at least 6 characters long"],
+      required: [true, "Password is required"]
     },
     isEmailVerified: {
       type: Boolean,
@@ -39,41 +35,54 @@ const UserProfileSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      required: [true, "Phone number is required"],
+      // required: [true, "Phone number is required"],
       minlength: [10, "Phone number must be at least 10 digits long"],
     },
     countryCode: {
       type: String,
-      required: [true, "Country code is required"],
+      // required: [true, "Country code is required"],
       match: [/^\+\d{1,3}$/, "Invalid country code format"], // Must start with + and digits
     },
     description: {
-      type: String,
-      maxlength: [200, "Description cannot be longer than 200 characters"],
+      type: String
     },
-    socialMediaLink: {
-      type: String,
-      match: [
-        /^https?:\/\/(www\.)?[a-zA-Z0-9\-]+\.[a-zA-Z]{2,}\/[a-zA-Z0-9\-]+$/,
-        "Invalid social media link",
-      ],
+    socialMediaLinks: {
+      type: Object,
+      validate: {
+        validator: function (socialMediaLinks) {
+          const validKeys = ["facebook", "instagram", "twitter", "linkedin"];
+          const valid = Object.keys(socialMediaLinks).every((key) =>
+            validKeys.includes(key)
+          );
+          if (!valid) {
+            return false;
+          }
+
+          const validUrls = Object.values(socialMediaLinks).every((url) =>
+            /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/i.test(
+              url
+            )
+          );
+          return validUrls;
+        },
+        message: "Invalid social media link",
+      },
     },
     profilePicture: {
       type: String,
-      match: [/^https?:\/\/.+\.(jpg|jpeg|png)$/, "Invalid image URL"], // URL format for image
+      // match: [/^https?:\/\/.+\.(jpg|jpeg|png)$/, "Invalid image URL"], // URL format for image
     },
     dateOfRegistration: {
       type: Date,
       default: Date.now,
     },
     preferences: {
-      type: String,
-      enum: ["Adventure", "Relaxation", "Culture", "Nature"],
-      default: "Adventure",
+      type: [String],
+      enum: ["Adventure", "Relaxation", "Culture", "Nature"]
     },
-    language: {
-      type: String,
-      default: "English",
+    languages: {
+      type: [String],
+      default: ["English"],
     },
     recentActivity: Date,
 
@@ -112,7 +121,7 @@ export const getUserById = async (id, select = {}) => {
 // Get a single user
 export const getUser = async (query, select = {}) => {
   try {
-    const user = await User.findOne(query, select);
+    const user = await User.findOne(query, { ...select, password: 0 });
     return user;
   } catch (error) {
     console.log(error);

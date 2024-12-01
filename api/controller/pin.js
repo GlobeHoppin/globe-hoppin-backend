@@ -4,16 +4,10 @@ import User from "../model/user";
 
 const addNewPin = async (req, res) => {
   const { body } = req;
-
-
-
   try {
     const user = req.user;
-
     const newPin = await createPin(body, user._id);
-
     await User.findByIdAndUpdate(user._id, { $push: { pins: newPin._id } });
-
     return res.status(201).json({ newPin });
   } catch (error) {
     if (error.name === "ValidationError") {
@@ -47,32 +41,18 @@ const addNewPin = async (req, res) => {
 };
 
 const updateUserPin = async (req, res) => {
-
-  const {
-    params: { id },
-    body,
-  } = req;
+  const { body,} = req;
 
   try {
     const user = req.user;
-
-    const pin = await getPinById(id);
+    const pin = req.pin;
 
     if (!pin) {
       console.error(`Pin not found with ID: ${id}`);
       return res.status(404).json({ message: "Pin not found" });
     }
 
-    if (pin.user.toString() !== user._id.toString()) {
-      console.error(
-        `User ${user._id} attempted to update a pin they do not own`
-      );
-      return res.status(403).json({
-        message: "Forbidden: You do not have permission to update this pin.",
-      });
-    }
-
-    const updatedPin = await updatePin(id, body);
+    const updatedPin = await updatePin(pin._id, body);
     console.log(`Pin updated successfully: ${updatedPin._id}`);
     return res.status(200).json({ updatedPin });
   } catch (error) {

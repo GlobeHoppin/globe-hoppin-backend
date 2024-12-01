@@ -35,10 +35,11 @@ export const updateUserController = async (req, res) => {
   const updatedData = req.body;
 
   try {
+    // TODO: make sure to update nested value and keep the rest of the object
     const updatedUser = await User.findByIdAndUpdate(id, updatedData, {
       new: true,
       runValidators: true,
-    });
+    }).select('-password');
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found while updating" });

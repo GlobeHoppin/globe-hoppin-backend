@@ -1,3 +1,5 @@
+import { getPinById } from "../model";
+
 const jwt = require("jsonwebtoken");
 const secret = process.env.SECRET;
 const { check, param ,body} = require('express-validator');
@@ -5,12 +7,11 @@ const { check, param ,body} = require('express-validator');
 
 export const validateToken = async (req, res, next) => {
   try {
-
     const {
       headers: { authorization = "", "x-access-token": xAccessToken = "" },
     } = req;
-    const token = xAccessToken || authorization
-
+    const bearerToken = xAccessToken || authorization
+    const token = bearerToken.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({ message: "No token provided" });
@@ -32,9 +33,22 @@ export const validateToken = async (req, res, next) => {
 
 
 export const checkAuthorisation = async (req, res, next) => {
-  if (!req.user) {
+  if (!req.user || String(req.user._id) !== String(req.params.id)) {
     return res.status(401).json({ message: "User not authorized" });
   }
+  next();
+};
+
+export const checkPinAuthorisation = async (req, res, next) => {
+  const pin = await getPinById(req.params.id);
+  if (!pin) {
+    console.error(`Pin not found with ID: ${req.params.id}`);
+    return res.status(404).json({ message: "Pin not found" });
+  }
+  if (!pin || String(pin.user) !== String(req.user._id)) {
+    return res.status(403).json({ message: "Forbidden: You do not have permission to update this pin." });
+  }
+  req.pin = pin;
   next();
 };
 
@@ -59,5 +73,4 @@ export const validateUpdatePin = [
   body('longitude').optional().isFloat({ min: -180, max: 180 }).withMessage('Longitude must be between -180 and 180'),
   body('title').optional().isString().isLength({ min: 3 }).withMessage('Title must be at least 3 characters long'),
   body('description').optional().isString().isLength({ max: 500 }).withMessage('Description cannot be longer than 500 characters'),
-
 ];

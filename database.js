@@ -54,7 +54,7 @@ const mongoConnect = async () => {
 
 mongoConnect()
   .then(() => {
-    console.log("[Info] Server Started Successfully! Listening on Port: 8080");
+    // console.log("[Info] Server Started Successfully! Listening on Port: 8080");
   })
   .catch((err) => {
     console.error("[Error] Failed to start the server:", err);

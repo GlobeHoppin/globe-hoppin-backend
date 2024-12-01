@@ -9,9 +9,9 @@ const UserRouter = new Express.Router();
 UserRouter.get("/", validateToken, getUserProfile);
 
 // Route to get the profile of a user by ID
-UserRouter.get("/:id", validateToken, getUserProfileById);  // New route
+// UserRouter.get("/:id", validateToken, getUserProfileById);  // New route
 
 // Route to update the profile of a user by ID
-UserRouter.put("/:id", validateToken,checkAuthorisation, updateUserController)
+UserRouter.post("/:id", validateToken, checkAuthorisation, updateUserController)
 
 export default UserRouter;

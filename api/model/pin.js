@@ -50,11 +50,11 @@ const PinSchema = new mongoose.Schema(
       ],
       maxlength: [50, "Tag cannot be longer than 50 characters"],
     }],
-    rating: {
-      type: Number,
-      min: [1, "Rating must be at least 1"],
-      max: [5, "Rating cannot be more than 5"],
-    },
+    // rating: {
+    //   type: Number,
+    //   min: [1, "Rating must be at least 1"],
+    //   max: [5, "Rating cannot be more than 5"],
+    // },
     visibility: {
       type: String,
       enum: ["public", "private", "shared"],
@@ -69,20 +69,18 @@ const PinSchema = new mongoose.Schema(
       enum: ["Favorite", "Visited", "Wishlist"],
       default: "Visited",
     },
-    travelDates: {
-      startDate: {
-        type: Date,
-        required: [true, "Start date is required"],
-      },
-      endDate: {
-        type: Date,
-        required: [true, "End date is required"],
-        validate: {
-          validator: function (value) {
-            return value >= this.travelDates.startDate;
-          },
-          message: "End date must be after the start date",
+    travelStartDate: {
+      type: Date,
+      required: [true, "Start date is required"],
+    },
+    travelEndDate: {
+      type: Date,
+      required: [true, "End date is required"],
+      validate: {
+        validator: function (value) {
+          return value >= this.travelStartDate;
         },
+        message: "End date must be after the start date",
       },
     },
     places: [{
