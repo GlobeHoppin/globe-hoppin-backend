@@ -121,7 +121,7 @@ export const getUserById = async (id, select = {}) => {
 // Get a single user
 export const getUser = async (query, select = {}) => {
   try {
-    const user = await User.findOne(query, { ...select, password: 0 });
+    const user = await User.findOne(query, { ...select });
     return user;
   } catch (error) {
     console.log(error);
